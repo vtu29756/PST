@@ -1,33 +1,26 @@
 class Solution {
-    public boolean repeatedSubstringPattern(String s) {
+    public int lengthOfLongestSubstring(String s) {
+        int[] lastSeen = new int[128];
+        
+        // -1 means the character has not been seen
+        java.util.Arrays.fill(lastSeen, -1);
 
-        int n = s.length();
+        int left = 0;
+        int maxLength = 0;
 
-        // Try every possible substring length
-        for (int len = 1; len <= n / 2; len++) {
+        for (int right = 0; right < s.length(); right++) {
+            char ch = s.charAt(right);
 
-            // The substring length must divide n
-            if (n % len != 0) {
-                continue;
+            // Move left past the previous occurrence
+            if (lastSeen[ch] >= left) {
+                left = lastSeen[ch] + 1;
             }
 
-            boolean valid = true;
+            lastSeen[ch] = right;
 
-            // Compare each character with the corresponding
-            // character in the repeating substring
-            for (int i = len; i < n; i++) {
-
-                if (s.charAt(i) != s.charAt(i % len)) {
-                    valid = false;
-                    break;
-                }
-            }
-
-            if (valid) {
-                return true;
-            }
+            maxLength = Math.max(maxLength, right - left + 1);
         }
 
-        return false;
+        return maxLength;
     }
 }
